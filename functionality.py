@@ -1,13 +1,15 @@
 import tkinter as tk
 from tkinter import messagebox
-# from PIL import Image, ImageTk
+from tkinter import ttk
+import customtkinter as ct
 
 
 class MyGUI:
     def __init__(self):
-        self.root = tk.Tk()
+        self.root = ct.CTk()
         self.root.iconbitmap("Images/favicon.ico")
-
+        self.style = ttk.Style(self.root)
+        self.style.theme_use("default")
         self.menubar = tk.Menu(self.root)
 
         self.filemenu = tk.Menu(self.menubar, tearoff=0)
@@ -35,7 +37,7 @@ class MyGUI:
         self.check = tk.Checkbutton(self.root, text="Show Message Box", font=('Arial', 16), variable=self.check_state)
         self.check.pack(padx=10, pady=10)
 
-        self.button = tk.Button(self.root, text="Show Message", font=('Arial', 18), command=self.show_message)
+        self.button = ct.CTkButton(self.root, text="Show Message", font=('Arial', 18), command=self.show_message)
         self.button.pack(padx=10, pady=15)
 
         self.deletebutton = tk.Button(self.root, text="Clear", font=('Arial', 18), command=self.clear)

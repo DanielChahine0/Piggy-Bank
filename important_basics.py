@@ -2,7 +2,7 @@ import tkinter as tk
 import customtkinter as ct
 
 # Main window
-root = tk.Tk()
+root = ct.CTk()
 
 # root configurations
 root.geometry("750x500")
