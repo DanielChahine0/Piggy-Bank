@@ -1,10 +1,16 @@
 import tkinter as tk
 from tkinter import messagebox
+from PIL import Image, ImageTk
 
 
 class MyGUI:
     def __init__(self):
         self.root = tk.Tk()
+
+        # self.ico = Image.open("Images/apple.jpg")
+        # self.photo = ImageTk.PhotoImage(self.ico)
+        # self.root.wm_iconphoto(False, self.photo)
+        self.root.iconbitmap("Images/favicon.ico")
 
         self.menubar = tk.Menu(self.root)
 
