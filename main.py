@@ -63,7 +63,7 @@ class PiggyBank:
         # Amount Input Text
         self.amountText = ct.CTkTextbox(self.root, height=self.amountInputHeight, width=self.amountInputWidth,
                                         font=('Arial', 15))
-        self.amountText.place(x=self.WIDTH - self.margin*5 - self.amountInputWidth,
+        self.amountText.place(x=self.WIDTH - self.margin * 5 - self.amountInputWidth,
                               y=self.pigSize + self.margin * 3 + self.habitInputHeight)
 
         # Add and Remove Buttons
