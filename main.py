@@ -76,7 +76,29 @@ class PiggyBank:
         self.removeAmountBtn.place(x=self.WIDTH - self.margin * 1.5 - self.btnWidth,
                                    y=self.margin*4 + self.pigSize + self.habitInputHeight + self.amountInputHeight)
 
+        # Guide Button
+        self.guideBtn = ct.CTkButton(self.root, width=self.btnWidth, height=self.btnHeight,
+                                     text="GUIDE", font=('Arial', 18, "bold"), command=self.open_guide)
+        self.guideBtn.place(x=self.WIDTH - 4.5 * self.margin - self.btnWidth,
+                            y=self.pigSize+self.habitInputHeight*2 + self.btnHeight + 5*self.margin)
+
         self.root.mainloop()
+
+    def open_guide(self):
+        guideWindow = tk.Toplevel()
+        guideWindow.title("Guide")
+        guideWindowWidth = 500
+        guideWindowHeight = 500
+        guideWindow.geometry(""+str(guideWindowWidth)+"x"+str(guideWindowHeight)+"+"
+                             + str(100+self.WIDTH//2)+"+"
+                             + str(300))
+        guideText = self.getText()
+        label = ct.CTkLabel(guideWindow, text=guideText, font=('Arial', 15))
+        label.pack()
+
+    def getText(self):
+        return "HI"
+
 
     def change_to_light(self):
         ct.set_appearance_mode("Light")
