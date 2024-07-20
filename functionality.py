@@ -7,7 +7,6 @@ import customtkinter as ct
 class MyGUI:
     def __init__(self):
         self.root = ct.CTk()
-        self.root.iconbitmap("Images/favicon.ico")
         self.style = ttk.Style(self.root)
         self.style.theme_use("default")
         self.menubar = tk.Menu(self.root)
