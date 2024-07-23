@@ -41,27 +41,10 @@ class PiggyBank:
                                     command=self.change_to_light,
                                     font=('Arial', 11))
         self.themeMenu = tk.Menu(self.viewMenu, tearoff=0)
-        # self.themeMenu.add_command(label="Red",
-        #                            command=self.red_theme,
-        #                            font=('Arial', 11))
-        # self.themeMenu.add_command(label="Orange",
-        #                            command=self.orange_theme,
-        #                            font=('Arial', 11))
-        # self.themeMenu.add_command(label="Yellow",
-        #                            command=self.yellow_theme,
-        #                            font=('Arial', 11))
-        # self.themeMenu.add_command(label="Green",
-        #                            command=self.green_theme,
-        #                            font=('Arial', 11))
-        # self.themeMenu.add_command(label="Blue",
-        #                            command=self.blue_theme,
-        #                            font=('Arial', 11))
-
         # Menu Configuration Section
         self.menubar.add_cascade(menu=self.fileMenu, label="File")
         self.menubar.add_cascade(menu=self.viewMenu, label="View")
         self.viewMenu.add_cascade(menu=self.appearance, label="Change Appearance", font=('Arial', 11))
-        # self.viewMenu.add_cascade(menu=self.themeMenu, label="Change Theme", font=('Arial', 11))
         self.root.configure(menu=self.menubar)
 
         # Piggy Bank Photo
@@ -82,6 +65,7 @@ class PiggyBank:
                                         font=('Arial', 15))
         self.amountText.place(x=self.WIDTH - self.margin * 5 - self.amountInputWidth,
                               y=self.pigSize + self.margin * 3 + self.habitInputHeight)
+        self.amountText.bind("<KeyRelease>", self.validate_input)
 
         # Add and Remove Buttons
         self.addAmountBtn = ct.CTkButton(self.root, width=self.btnWidth, height=self.btnHeight,
@@ -112,6 +96,12 @@ class PiggyBank:
                                        y=self.HEIGHT - self.margin//5 - self.themeBtnSize)
 
         self.root.mainloop()
+
+    def validate_input(self, event):
+        new_value = self.amountText.get("1.0", "end-1c")
+        if not new_value.isdigit():
+            self.amountText.delete("1.0", "end")
+            self.amountText.insert("1.0", ''.join(filter(str.isdigit, new_value)))
 
     def open_guide(self):
         guideWindow = tk.Toplevel()
