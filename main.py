@@ -104,45 +104,78 @@ class PiggyBank:
             self.amountText.insert("1.0", ''.join(filter(str.isdigit, new_value)))
 
     def open_guide(self):
-        guideWindow = tk.Toplevel()
+        # Create a new window
+        guideWindow = ct.CTkToplevel()
         guideWindow.title("Guide")
         guideWindow.resizable(False, False)
+        guideMargin = 25
         guideWindowWidth = 500
-        guideWindowHeight = 500
+        guideWindowHeight = 550
         guideWindow.geometry(""+str(guideWindowWidth)+"x"+str(guideWindowHeight)+"+"
-                             + str(100+self.WIDTH//2)+"+"
-                             + str(300))
+                             + str(200+self.WIDTH//2-guideWindowWidth//2)+"+"
+                             + str(150))
+
+        # Get the text from the txt file and display it
         guideText = self.getText()
         label = ct.CTkLabel(guideWindow, text=guideText, font=('Arial', 15))
         label.pack()
 
+        # ADD and CLEAR Buttons
+        btnHeight = 40
+        btnWidth = (guideWindowWidth - 7 * guideMargin)//2
+        guideAddBtn = ct.CTkButton(guideWindow,
+                                   width=btnWidth,
+                                   height=btnHeight,
+                                   text="ADD",
+                                   font=('Arial', 15),
+                                   corner_radius=30,
+                                   command=self.add_to_guide)
+        guideAddBtn.place(x=3*guideMargin,
+                          y=guideWindowHeight-guideMargin-btnHeight)
+        guideClearBtn = ct.CTkButton(guideWindow,
+                                     width=btnWidth,
+                                     height=btnHeight,
+                                     text="CLEAR",
+                                     font=('Arial', 15),
+                                     corner_radius=30,
+                                     command=self.clear_guide)
+        guideClearBtn.place(x=4*guideMargin + btnWidth,
+                            y=guideWindowHeight-guideMargin-btnHeight)
+
+        # Guide Input & Amount Text
+        guideHabitWidth = 300
+        guideHabitHeight = guideAmountHeight = 30
+        guideAmountWidth = guideWindowWidth - 3 * guideMargin - guideHabitWidth
+        guideHabit = ct.CTkTextbox(guideWindow,
+                                   height=guideHabitHeight,
+                                   width=guideHabitWidth,
+                                   font=('Arial', 15))
+        guideHabit.place(x=guideMargin,
+                         y=guideWindowHeight - 2*guideMargin - guideHabitHeight - btnHeight)
+
+        guideAmount = ct.CTkTextbox(guideWindow,
+                                    height=guideAmountHeight,
+                                    width=guideAmountWidth,
+                                    font=('Arial', 15))
+        guideAmount.place(x=guideMargin * 2 + guideHabitWidth,
+                          y=guideWindowHeight - 2 * guideMargin - guideHabitHeight - btnHeight)
+
+        # put the focus on the window to make it on top
+        guideWindow.lift()
+        guideWindow.focus_force()
+        guideWindow.grab_set()
+
+    def add_to_guide(self):
+        print("ADDED TO GUIDE")
+
+    def clear_guide(self):
+        print("GUIDE CLEARED")
+
     def getText(self):
-        return "HI"
+        text = ""
 
-    def change_theme(self):
-        themeWindow = tk.Toplevel()
-        themeWindow.title("Change Theme")
-        themeWindowWidth = 500
-        themeWindowHeight = 500
-        themeWindow.geometry("" + str(themeWindowWidth) + "x" + str(themeWindowHeight) + "+"
-                             + str(100 + self.WIDTH // 2) + "+"
-                             + str(300))
 
-    def red_theme(self):
-        ct.set_default_color_theme("red")
-
-    def orange_theme(self):
-        ct.set_default_color_theme("orange")
-
-    def yellow_theme(self):
-        ct.set_default_color_theme("yellow")
-
-    def green_theme(self):
-        ct.set_default_color_theme("green")
-
-    def blue_theme(self):
-        ct.set_default_color_theme("blue")
-
+        return text
 
     def switch_appearance(self):
         if ct.get_appearance_mode() == "Light":
