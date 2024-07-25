@@ -117,23 +117,13 @@ class PiggyBank:
                              + str(150))
 
         # Get the text from the txt file and display it
-        # guideLeftText, maxFirstLen = self.getLeftText()
-        # guideRightText, maxSecondLen = self.getRightText()
         guideText = self.getText()
-        # maxLen = max(maxFirstLen, maxSecondLen)
-        # fontFactor = 350
         fontSize = 15  # Ensure the font size is at least 10
-        leftLabel = ct.CTkLabel(guideWindow,
+        textLabel = ct.CTkLabel(guideWindow,
                                 width=10,
                                 text=guideText,
                                 font=('Arial',  fontSize))
-        leftLabel.pack(pady=guideMargin)
-
-        # rightLabel = ct.CTkLabel(guideWindow,
-        #                          width=10,
-        #                          text=guideRightText,
-        #                          font=('Arial', fontSize))
-        # rightLabel.place(x=guideWindowWidth//2 + guideMargin, y=guideMargin)
+        textLabel.pack(pady=guideMargin)
 
         # ADD and CLEAR Buttons
         btnHeight = 40
@@ -195,20 +185,6 @@ class PiggyBank:
             habit, amount = line.split("#-#")
             text += habit + " - " + amount
         return text
-
-    # def getRightText(self):
-    #     text = ""
-    #     f = open("Data/guide.txt", "r")
-    #     counter = 0
-    #     maxLen = 0
-    #     for line in f:
-    #         counter += 1
-    #         if counter % 2 == 0:
-    #             habit, amount = line.split("#-#")
-    #             text += habit + " - " + amount
-    #             if len(habit + " - " + amount) > maxLen:
-    #                 maxLen = len(habit + " - " + amount)
-    #     return text, maxLen
 
     def switch_appearance(self):
         if ct.get_appearance_mode() == "Light":
