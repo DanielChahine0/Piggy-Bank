@@ -6,6 +6,7 @@ import tkinter as tk
 class PiggyBank:
     def __init__(self):
         # Size Configuration
+
         self.WIDTH = 1200
         self.HEIGHT = 600
         self.pigSize = 300
@@ -116,9 +117,23 @@ class PiggyBank:
                              + str(150))
 
         # Get the text from the txt file and display it
+        # guideLeftText, maxFirstLen = self.getLeftText()
+        # guideRightText, maxSecondLen = self.getRightText()
         guideText = self.getText()
-        label = ct.CTkLabel(guideWindow, text=guideText, font=('Arial', 15))
-        label.pack()
+        # maxLen = max(maxFirstLen, maxSecondLen)
+        # fontFactor = 350
+        fontSize = 15  # Ensure the font size is at least 10
+        leftLabel = ct.CTkLabel(guideWindow,
+                                width=10,
+                                text=guideText,
+                                font=('Arial',  fontSize))
+        leftLabel.pack(pady=guideMargin)
+
+        # rightLabel = ct.CTkLabel(guideWindow,
+        #                          width=10,
+        #                          text=guideRightText,
+        #                          font=('Arial', fontSize))
+        # rightLabel.place(x=guideWindowWidth//2 + guideMargin, y=guideMargin)
 
         # ADD and CLEAR Buttons
         btnHeight = 40
@@ -173,9 +188,27 @@ class PiggyBank:
 
     def getText(self):
         text = ""
-
-
+        f = open("Data/guide.txt", "r")
+        counter = 0
+        for line in f:
+            counter += 1
+            habit, amount = line.split("#-#")
+            text += habit + " - " + amount
         return text
+
+    # def getRightText(self):
+    #     text = ""
+    #     f = open("Data/guide.txt", "r")
+    #     counter = 0
+    #     maxLen = 0
+    #     for line in f:
+    #         counter += 1
+    #         if counter % 2 == 0:
+    #             habit, amount = line.split("#-#")
+    #             text += habit + " - " + amount
+    #             if len(habit + " - " + amount) > maxLen:
+    #                 maxLen = len(habit + " - " + amount)
+    #     return text, maxLen
 
     def switch_appearance(self):
         if ct.get_appearance_mode() == "Light":
