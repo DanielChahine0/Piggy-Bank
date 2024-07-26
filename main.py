@@ -116,14 +116,20 @@ class PiggyBank:
                              + str(200+self.WIDTH//2-guideWindowWidth//2)+"+"
                              + str(150))
 
+        # Make a frame
+        scrollable_frame = ct.CTkScrollableFrame(guideWindow,
+                                                 width=guideWindowWidth,
+                                                 height=guideWindowHeight-175)
+        scrollable_frame.pack(pady=20, padx=20)
+
         # Get the text from the txt file and display it
         guideText = self.getText()
         fontSize = 15  # Ensure the font size is at least 10
-        textLabel = ct.CTkLabel(guideWindow,
+        textLabel = ct.CTkLabel(scrollable_frame,
                                 width=10,
                                 text=guideText,
                                 font=('Arial',  fontSize))
-        textLabel.pack(pady=guideMargin)
+        textLabel.pack()
 
         # ADD and CLEAR Buttons
         btnHeight = 40
@@ -146,7 +152,7 @@ class PiggyBank:
                                      command=self.clear_guide)
         guideClearBtn.place(x=4*guideMargin + btnWidth,
                             y=guideWindowHeight-guideMargin-btnHeight)
-
+        1
         # Guide Input & Amount Text
         guideHabitWidth = 300
         guideHabitHeight = guideAmountHeight = 30
@@ -174,7 +180,8 @@ class PiggyBank:
         print("ADDED TO GUIDE")
 
     def clear_guide(self):
-        print("GUIDE CLEARED")
+        f = open("Data/guide.txt", "w")
+        f.write("")
 
     def getText(self):
         text = ""
@@ -183,7 +190,7 @@ class PiggyBank:
         for line in f:
             counter += 1
             habit, amount = line.split("#-#")
-            text += habit + " - " + amount
+            text += habit + " / " + amount
         return text
 
     def switch_appearance(self):
