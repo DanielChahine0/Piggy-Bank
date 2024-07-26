@@ -5,8 +5,11 @@ import tkinter as tk
 
 class PiggyBank:
     def __init__(self):
+        # shared variables
+        self.guideAmount = None
+        self.guideHabit = None
+        self.textLabel = None
         # Size Configuration
-
         self.WIDTH = 1200
         self.HEIGHT = 600
         self.pigSize = 300
@@ -125,11 +128,11 @@ class PiggyBank:
         # Get the text from the txt file and display it
         guideText = self.getText()
         fontSize = 15  # Ensure the font size is at least 10
-        textLabel = ct.CTkLabel(scrollable_frame,
-                                width=10,
-                                text=guideText,
-                                font=('Arial',  fontSize))
-        textLabel.pack()
+        self.textLabel = ct.CTkLabel(scrollable_frame,
+                                     width=10,
+                                     text=guideText,
+                                     font=('Arial',  fontSize))
+        self.textLabel.pack()
 
         # ADD and CLEAR Buttons
         btnHeight = 40
@@ -152,24 +155,24 @@ class PiggyBank:
                                      command=self.clear_guide)
         guideClearBtn.place(x=4*guideMargin + btnWidth,
                             y=guideWindowHeight-guideMargin-btnHeight)
-        1
+
         # Guide Input & Amount Text
         guideHabitWidth = 300
         guideHabitHeight = guideAmountHeight = 30
         guideAmountWidth = guideWindowWidth - 3 * guideMargin - guideHabitWidth
-        guideHabit = ct.CTkTextbox(guideWindow,
-                                   height=guideHabitHeight,
-                                   width=guideHabitWidth,
-                                   font=('Arial', 15))
-        guideHabit.place(x=guideMargin,
-                         y=guideWindowHeight - 2*guideMargin - guideHabitHeight - btnHeight)
+        self.guideHabit = ct.CTkTextbox(guideWindow,
+                                        height=guideHabitHeight,
+                                        width=guideHabitWidth,
+                                        font=('Arial', 15))
+        self.guideHabit.place(x=guideMargin,
+                              y=guideWindowHeight - 2*guideMargin - guideHabitHeight - btnHeight)
 
-        guideAmount = ct.CTkTextbox(guideWindow,
-                                    height=guideAmountHeight,
-                                    width=guideAmountWidth,
-                                    font=('Arial', 15))
-        guideAmount.place(x=guideMargin * 2 + guideHabitWidth,
-                          y=guideWindowHeight - 2 * guideMargin - guideHabitHeight - btnHeight)
+        self.guideAmount = ct.CTkTextbox(guideWindow,
+                                         height=guideAmountHeight,
+                                         width=guideAmountWidth,
+                                         font=('Arial', 15))
+        self.guideAmount.place(x=guideMargin * 2 + guideHabitWidth,
+                               y=guideWindowHeight - 2 * guideMargin - guideHabitHeight - btnHeight)
 
         # put the focus on the window to make it on top
         guideWindow.lift()
@@ -177,11 +180,31 @@ class PiggyBank:
         guideWindow.grab_set()
 
     def add_to_guide(self):
-        print("ADDED TO GUIDE")
+        # Convert the input into text
+        habit_text_guide = self.guideHabit.get("1.0", "end-1c").strip()
+        amount_text_guide = self.guideAmount.get("1.0", "end-1c").strip()
+
+        # Check if the inputs are not empty
+        if habit_text_guide and amount_text_guide:
+            f = open("Data/guide.txt", "a")
+            text = habit_text_guide + " #-# " + amount_text_guide + "\n"
+            f.write(text)
+            f.close()
+            # Clear the input fields after the inputs has been added
+            self.guideAmount.delete("1.0", "end-1c")
+            self.guideHabit.delete("1.0", "end-1c")
+
+        self.update_guide_text()
 
     def clear_guide(self):
         f = open("Data/guide.txt", "w")
         f.write("")
+        f.close()
+        self.update_guide_text()
+
+    def update_guide_text(self):
+        guideText = self.getText()
+        self.textLabel.configure(text=guideText)
 
     def getText(self):
         text = ""
@@ -191,6 +214,7 @@ class PiggyBank:
             counter += 1
             habit, amount = line.split("#-#")
             text += habit + " / " + amount
+        f.close()
         return text
 
     def switch_appearance(self):
