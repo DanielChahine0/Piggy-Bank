@@ -92,8 +92,12 @@ class PiggyBank:
                                          command=self.add_to_bank)
         self.addAmountBtn.place(x=self.WIDTH - self.margin * 2.5 - self.btnWidth * 2,
                                 y=self.margin*4 + self.pigSize + self.habitInputHeight + self.amountInputHeight)
-        self.removeAmountBtn = ct.CTkButton(self.root, width=self.btnWidth, height=self.btnHeight,
-                                            text="REMOVE", font=('Arial', 18, "bold"))
+        self.removeAmountBtn = ct.CTkButton(self.root,
+                                            width=self.btnWidth,
+                                            height=self.btnHeight,
+                                            text="REMOVE",
+                                            font=('Arial', 18, "bold"),
+                                            command=self.remove_from_bank)
         self.removeAmountBtn.place(x=self.WIDTH - self.margin * 1.5 - self.btnWidth,
                                    y=self.margin*4 + self.pigSize + self.habitInputHeight + self.amountInputHeight)
 
@@ -132,6 +136,30 @@ class PiggyBank:
 
         self.root.mainloop()
 
+    def remove_from_bank(self):
+        # Convert the input into text
+        habit_text = self.habitText.get("1.0", "end-1c").strip()
+        amount_text = self.amountText.get("1.0", "end-1c").strip()
+
+        # Check if the inputs are not empty
+        if habit_text and amount_text:
+            # Update the total
+            self.total = self.get_total()
+            self.total -= float(amount_text)
+            self.save_total()
+
+            with open("Data/data.txt", "r") as f:
+                lines = f.readlines()
+            with open("Data/data.txt", "w") as f:
+                f.write(f"[{self.total:.2f}] {habit_text} -{amount_text}\n")
+                f.writelines(lines)
+
+            # Clear the input fields after the inputs has been added
+            self.habitText.delete("1.0", "end-1c")
+            self.amountText.delete("1.0", "end-1c")
+
+            self.update_root()
+
     def add_to_bank(self):
         # Convert the input into text
         habit_text = self.habitText.get("1.0", "end-1c").strip()
@@ -139,19 +167,21 @@ class PiggyBank:
 
         # Check if the inputs are not empty
         if habit_text and amount_text:
-            f = open("Data/data.txt", "a")
-            text = habit_text + " #-# " + amount_text + "\n"
-            f.write(text)
-            f.close()
+            # Update the total
+            self.total = self.get_total()
+            self.total += int(amount_text)
+            self.save_total()
+
+            with open("Data/data.txt", "r") as f:
+                lines = f.readlines()
+            with open("Data/data.txt", "w") as f:
+                f.write(f"[{self.total}] {habit_text} {amount_text}\n")
+                f.writelines(lines)
 
             # Clear the input fields after the inputs has been added
             self.habitText.delete("1.0", "end-1c")
             self.amountText.delete("1.0", "end-1c")
 
-            # Update the total
-            self.total = self.get_total()
-            self.total += int(amount_text)
-            self.save_total()
             self.update_root()
 
     def save_total(self):
@@ -169,10 +199,7 @@ class PiggyBank:
         with open("Data/data.txt", "r") as f:
             text = ""
             for line in f:
-                habit, amount = line.split("#-#")
-                habit = habit.strip()
-                amount = amount.strip()
-                text += "["+str(self.total)+"]"+amount + " " + habit + "\n"
+                text += line
                 self.update_text.configure(text=text)
 
     def update_total(self):
@@ -184,7 +211,7 @@ class PiggyBank:
             lines = f.readlines()
             if lines:
                 return int(lines[0].strip())
-            return 0
+            return 0.00
 
     def validate_input(self, event):
         new_value = self.amountText.get("1.0", "end-1c")
