@@ -9,6 +9,8 @@ class PiggyBank:
         self.guideAmount = None
         self.guideHabit = None
         self.textLabel = None
+        self.total = self.get_total()
+
         # Size Configuration
         self.WIDTH = 1200
         self.HEIGHT = 600
@@ -58,6 +60,16 @@ class PiggyBank:
         self.panel.place(x=self.WIDTH-self.pigSize-self.margin,
                          y=self.margin)
 
+        # Amount inside the piggy bank1
+        self.totalLabel = ct.CTkLabel(self.root,
+                                      text="${:,.2f}".format(self.total),
+                                      font=('Arial', 45, "bold"),
+                                      bg_color="#FFA4A0",
+                                      fg_color="transparent")
+        self.totalLabel.place(x=self.WIDTH - self.pigSize - self.margin + self.pigSize // 2,
+                              y=self.margin*2 + self.pigSize // 2,
+                              anchor="center")
+
         # Habit Input Text
         self.habitText = ct.CTkTextbox(self.root, height=self.habitInputHeight, width=self.habitInputWidth,
                                        font=('Arial', 15))
@@ -72,8 +84,12 @@ class PiggyBank:
         self.amountText.bind("<KeyRelease>", self.validate_input)
 
         # Add and Remove Buttons
-        self.addAmountBtn = ct.CTkButton(self.root, width=self.btnWidth, height=self.btnHeight,
-                                         text="ADD", font=('Arial', 18, "bold"))
+        self.addAmountBtn = ct.CTkButton(self.root,
+                                         width=self.btnWidth,
+                                         height=self.btnHeight,
+                                         text="ADD",
+                                         font=('Arial', 18, "bold"),
+                                         command=self.add_to_bank)
         self.addAmountBtn.place(x=self.WIDTH - self.margin * 2.5 - self.btnWidth * 2,
                                 y=self.margin*4 + self.pigSize + self.habitInputHeight + self.amountInputHeight)
         self.removeAmountBtn = ct.CTkButton(self.root, width=self.btnWidth, height=self.btnHeight,
@@ -100,6 +116,46 @@ class PiggyBank:
                                        y=self.HEIGHT - self.margin//5 - self.themeBtnSize)
 
         self.root.mainloop()
+
+    def add_to_bank(self):
+        # Convert the input into text
+        habit_text = self.habitText.get("1.0", "end-1c").strip()
+        amount_text = self.amountText.get("1.0", "end-1c").strip()
+
+        # Check if the inputs are not empty
+        if habit_text and amount_text:
+            f = open("Data/data.txt", "a")
+            text = habit_text + " #-# " + amount_text + "\n"
+            f.write(text)
+            f.close()
+
+            # Clear the input fields after the inputs has been added
+            self.habitText.delete("1.0", "end-1c")
+            self.amountText.delete("1.0", "end-1c")
+
+            # Update the total
+            self.total = self.get_total()
+            self.total += int(amount_text)
+            self.save_total()
+            self.update_root()
+
+    def save_total(self):
+        with open("Data/total.txt", "r") as f:
+            lines = f.readlines()
+        with open("Data/total.txt", "w") as f:
+            f.write(str(self.total) + "\n")
+            f.writelines(lines)
+
+    def update_root(self):
+        self.total = self.get_total()
+        self.totalLabel.configure(text="${:,.2f}".format(self.total))
+
+    def get_total(self):
+        with open("Data/total.txt", "r") as f:
+            lines = f.readlines()
+            if lines:
+                return int(lines[0].strip())
+            return 0
 
     def validate_input(self, event):
         new_value = self.amountText.get("1.0", "end-1c")
@@ -213,7 +269,9 @@ class PiggyBank:
         for line in f:
             counter += 1
             habit, amount = line.split("#-#")
-            text += habit + " / " + amount
+            habit = habit.strip()
+            amount = amount.strip()
+            text += habit + " " + amount + "$\n"
         f.close()
         return text
 
