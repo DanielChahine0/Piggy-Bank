@@ -115,6 +115,21 @@ class PiggyBank:
         self.switchAppearanceBtn.place(x=self.WIDTH - self.margin//5 - self.themeBtnSize,
                                        y=self.HEIGHT - self.margin//5 - self.themeBtnSize)
 
+        # Scrollable frame to display the latest updates
+        self.update_frame_width = 250
+        self.update_frame_height = self.HEIGHT - self.margin * 3
+        self.update_frame = ct.CTkScrollableFrame(self.root,
+                                                  width=self.update_frame_width,
+                                                  height=self.update_frame_height)
+        self.update_frame.place(x=self.WIDTH - self.pigSize - self.margin * 3 - self.update_frame_width,
+                                y=self.margin)
+        # Text inside the scrollable frame
+        self.update_text = ct.CTkLabel(self.update_frame,
+                                       width=10,
+                                       font=('Arial', 15))
+        self.update_text.pack()
+        self.update_root()
+
         self.root.mainloop()
 
     def add_to_bank(self):
@@ -147,6 +162,20 @@ class PiggyBank:
             f.writelines(lines)
 
     def update_root(self):
+        self.update_updateFrame()
+        self.update_total()
+
+    def update_updateFrame(self):
+        with open("Data/data.txt", "r") as f:
+            text = ""
+            for line in f:
+                habit, amount = line.split("#-#")
+                habit = habit.strip()
+                amount = amount.strip()
+                text += "["+str(self.total)+"]"+amount + " " + habit + "\n"
+                self.update_text.configure(text=text)
+
+    def update_total(self):
         self.total = self.get_total()
         self.totalLabel.configure(text="${:,.2f}".format(self.total))
 
