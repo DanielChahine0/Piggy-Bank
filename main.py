@@ -1,6 +1,7 @@
 import customtkinter as ct
 from PIL import Image
 import tkinter as tk
+from datetime import date
 
 
 class PiggyBank:
@@ -145,7 +146,7 @@ class PiggyBank:
         if habit_text and amount_text:
             # Update the total
             self.total = self.get_total()
-            self.total -= float(amount_text)
+            self.total -= int(amount_text)
             self.save_total()
 
             with open("Data/data.txt", "r") as f:
@@ -175,7 +176,7 @@ class PiggyBank:
             with open("Data/data.txt", "r") as f:
                 lines = f.readlines()
             with open("Data/data.txt", "w") as f:
-                f.write(f"[{self.total}] {habit_text} {amount_text}\n")
+                f.write(f"[{self.total:.2f}] {habit_text} {amount_text}\n")
                 f.writelines(lines)
 
             # Clear the input fields after the inputs has been added
@@ -211,7 +212,7 @@ class PiggyBank:
             lines = f.readlines()
             if lines:
                 return int(lines[0].strip())
-            return 0.00
+            return 0
 
     def validate_input(self, event):
         new_value = self.amountText.get("1.0", "end-1c")
@@ -347,3 +348,4 @@ class PiggyBank:
 
 
 PiggyBank()
+# day = today.
