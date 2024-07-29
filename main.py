@@ -153,21 +153,6 @@ class PiggyBank:
         self.switchAppearanceBtn.place(x=self.WIDTH - self.margin//5 - self.themeBtnSize,
                                        y=self.HEIGHT - self.margin//5 - self.themeBtnSize)
 
-        # Scrollable frame to display the latest updates
-        self.update_frame_width = 250
-        self.update_frame_height = self.HEIGHT - self.margin * 3
-        self.update_frame = ct.CTkScrollableFrame(self.root,
-                                                  width=self.update_frame_width,
-                                                  height=self.update_frame_height)
-        self.update_frame.place(x=self.WIDTH - self.pigSize - self.margin * 3 - self.update_frame_width,
-                                y=self.margin)
-        # Text inside the scrollable frame
-        self.update_text = ct.CTkLabel(self.update_frame,
-                                       width=10,
-                                       font=('Arial', 15))
-        self.update_text.pack()
-        self.update_root()
-
         self.root.mainloop()
 
     def display_logs(self):
@@ -175,19 +160,41 @@ class PiggyBank:
         logsWindow = ct.CTkToplevel()
         logsWindow.title("Current Logs")
         logsWindow.resizable(False, False)
-        logsMargin = 25
+        logsMargin = 10
         logsWindowWidth = 400
         logsWindowHeight = 550
         logsWindow.geometry("" + str(logsWindowWidth) + "x" + str(logsWindowHeight) + "+"
                             + str(200 + self.WIDTH // 2 - logsWindowWidth // 2) + "+"
                             + str(150))
 
+        update_frame_width = 250
+        update_frame_height = logsWindowHeight - logsMargin * 3
+        update_frame = ct.CTkScrollableFrame(logsWindow,
+                                             width=update_frame_width,
+                                             height=update_frame_height)
+        update_frame.pack(pady=logsMargin)
+        # update_frame.place(x=self.WIDTH - self.pigSize - self.margin * 3 - self.update_frame_width,
+        #                    y=self.margin)
+        # Text inside the scrollable frame
+        allData = self.get_data()
+        update_text = ct.CTkLabel(update_frame,
+                                  width=10,
+                                  font=('Arial', 15),
+                                  text=allData)
+        update_text.pack()
 
         # Force the window to be on top
         logsWindow.lift()
         logsWindow.focus_force()
         logsWindow.grab_set()
 
+    def get_data(self):
+        with open("Data/data.txt", "r") as f:
+            text = ""
+            for line in f:
+                text += line
+
+        return text
 
     def clear_data(self):
         with open("Data/data.txt", "w") as f:
@@ -239,8 +246,8 @@ class PiggyBank:
                 f.writelines(lines)
 
             # Clear the input fields after the inputs has been added
-            self.habitText.delete("1.0", "end-1c")
-            self.amountText.delete("1.0", "end-1c")
+            # self.habitText.delete("1.0", "end-1c")
+            # self.amountText.delete("1.0", "end-1c")
 
             self.update_root()
 
@@ -252,15 +259,7 @@ class PiggyBank:
             f.writelines(lines)
 
     def update_root(self):
-        self.update_updateFrame()
         self.update_total()
-
-    def update_updateFrame(self):
-        with open("Data/data.txt", "r") as f:
-            text = ""
-            for line in f:
-                text += line
-                self.update_text.configure(text=text)
 
     def update_total(self):
         self.total = self.get_total()
