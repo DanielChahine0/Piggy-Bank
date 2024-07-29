@@ -1,7 +1,7 @@
 import customtkinter as ct
 from PIL import Image
 import tkinter as tk
-from datetime import date
+# from datetime import date
 
 
 class PiggyBank:
@@ -16,10 +16,10 @@ class PiggyBank:
         self.WIDTH = 1200
         self.HEIGHT = 600
         self.pigSize = 300
-        self.margin = 25
-        self.habitInputWidth = 250
+        self.margin = 15
+        self.habitInputWidth = self.pigSize - 110
         self.habitInputHeight = self.amountInputHeight = 30
-        self.amountInputWidth = 100
+        self.amountInputWidth = self.pigSize - 135
         self.btnWidth = 125
         self.btnHeight = 40
         self.themeBtnSize = 35
@@ -72,15 +72,31 @@ class PiggyBank:
                               anchor="center")
 
         # Habit Input Text
-        self.habitText = ct.CTkTextbox(self.root, height=self.habitInputHeight, width=self.habitInputWidth,
+        self.HabitLabelWidth = 110
+        self.habitLabel = ct.CTkLabel(self.root,
+                                      text="Enter Habit: ",
+                                      font=('Arial', 20))
+        self.habitLabel.place(x=self.WIDTH-self.pigSize-self.margin,
+                              y=self.pigSize+2*self.margin)
+        self.habitText = ct.CTkTextbox(self.root, height=self.habitInputHeight,
+                                       width=self.habitInputWidth,
                                        font=('Arial', 15))
-        self.habitText.place(x=self.WIDTH-self.margin*2-self.habitInputWidth,
+        self.habitText.place(x=self.WIDTH-self.pigSize-self.margin+self.HabitLabelWidth,
                              y=self.pigSize+2*self.margin)
 
         # Amount Input Text
-        self.amountText = ct.CTkTextbox(self.root, height=self.amountInputHeight, width=self.amountInputWidth,
+        self.amountLabelWidth = 135
+        self.amountLabel = ct.CTkLabel(self.root,
+                                       text="Enter Amount: ",
+                                       font=("Arial", 20),
+                                       width=self.amountLabelWidth)
+        self.amountLabel.place(x=self.WIDTH-self.pigSize-self.margin,
+                               y=self.pigSize+3*self.margin+self.habitInputHeight)
+        self.amountText = ct.CTkTextbox(self.root,
+                                        height=self.amountInputHeight,
+                                        width=self.amountInputWidth,
                                         font=('Arial', 15))
-        self.amountText.place(x=self.WIDTH - self.margin * 5 - self.amountInputWidth,
+        self.amountText.place(x=self.WIDTH-self.pigSize-self.margin+self.amountLabelWidth,
                               y=self.pigSize + self.margin * 3 + self.habitInputHeight)
         self.amountText.bind("<KeyRelease>", self.validate_input)
 
@@ -91,8 +107,8 @@ class PiggyBank:
                                          text="ADD",
                                          font=('Arial', 18, "bold"),
                                          command=self.add_to_bank)
-        self.addAmountBtn.place(x=self.WIDTH - self.margin * 2.5 - self.btnWidth * 2,
-                                y=self.margin*4 + self.pigSize + self.habitInputHeight + self.amountInputHeight)
+        self.addAmountBtn.place(x=self.WIDTH-self.margin*2.5-self.btnWidth*2,
+                                y=self.margin*4+self.pigSize+self.habitInputHeight+self.amountInputHeight)
         self.removeAmountBtn = ct.CTkButton(self.root,
                                             width=self.btnWidth,
                                             height=self.btnHeight,
@@ -102,11 +118,28 @@ class PiggyBank:
         self.removeAmountBtn.place(x=self.WIDTH - self.margin * 1.5 - self.btnWidth,
                                    y=self.margin*4 + self.pigSize + self.habitInputHeight + self.amountInputHeight)
 
+        # Clear Button
+        self.clearBtn = ct.CTkButton(self.root, width=self.btnWidth, height=self.btnHeight,
+                                     text="CLEAR", font=('Arial', 18, "bold"), command=self.clear_data)
+        self.clearBtn.place(x=self.WIDTH-self.margin*2.5-self.btnWidth*2,
+                            y=self.pigSize+self.habitInputHeight*2+self.btnHeight+4.6*self.margin)
+
         # Guide Button
         self.guideBtn = ct.CTkButton(self.root, width=self.btnWidth, height=self.btnHeight,
                                      text="GUIDE", font=('Arial', 18, "bold"), command=self.open_guide)
-        self.guideBtn.place(x=self.WIDTH - 4.5 * self.margin - self.btnWidth,
-                            y=self.pigSize+self.habitInputHeight*2 + self.btnHeight + 5*self.margin)
+        self.guideBtn.place(x=self.WIDTH-self.margin*1.5 - self.btnWidth,
+                            y=self.pigSize+self.habitInputHeight*2+self.btnHeight+4.6*self.margin)
+
+        # Display Logs Button
+        self.displayLogsBtn = ct.CTkButton(self.root,
+                                           width=self.btnWidth*2+self.margin,
+                                           height=self.btnHeight,
+                                           command=self.display_logs,
+                                           text="DISPLAY LOGS",
+                                           font=('Arial', 18, "bold"),
+                                           corner_radius=self.btnWidth)
+        self.displayLogsBtn.place(x=self.WIDTH-self.margin*2.5-self.btnWidth*2,
+                                  y=self.HEIGHT-self.btnHeight-self.themeBtnSize-self.margin//2)
 
         # Switch Appearance Button
         self.switchAppearanceBtn = ct.CTkButton(self.root,
@@ -136,6 +169,32 @@ class PiggyBank:
         self.update_root()
 
         self.root.mainloop()
+
+    def display_logs(self):
+        # Window settings
+        logsWindow = ct.CTkToplevel()
+        logsWindow.title("Current Logs")
+        logsWindow.resizable(False, False)
+        logsMargin = 25
+        logsWindowWidth = 400
+        logsWindowHeight = 550
+        logsWindow.geometry("" + str(logsWindowWidth) + "x" + str(logsWindowHeight) + "+"
+                            + str(200 + self.WIDTH // 2 - logsWindowWidth // 2) + "+"
+                            + str(150))
+
+
+        # Force the window to be on top
+        logsWindow.lift()
+        logsWindow.focus_force()
+        logsWindow.grab_set()
+
+
+    def clear_data(self):
+        with open("Data/data.txt", "w") as f:
+            f.write(" ")
+        with open("Data/total.txt", "w") as f:
+            f.write("")
+        self.update_root()
 
     def remove_from_bank(self):
         # Convert the input into text
@@ -348,4 +407,3 @@ class PiggyBank:
 
 
 PiggyBank()
-# day = today.
