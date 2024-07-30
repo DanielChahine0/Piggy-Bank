@@ -167,7 +167,7 @@ class PiggyBank:
                             + str(200 + self.WIDTH // 2 - logsWindowWidth // 2) + "+"
                             + str(150))
 
-        update_frame_width = 250
+        update_frame_width = 350
         update_frame_height = logsWindowHeight - logsMargin * 3
         update_frame = ct.CTkScrollableFrame(logsWindow,
                                              width=update_frame_width,
@@ -242,12 +242,12 @@ class PiggyBank:
             with open("Data/data.txt", "r") as f:
                 lines = f.readlines()
             with open("Data/data.txt", "w") as f:
-                f.write(f"[{self.total:.2f}] {habit_text} {amount_text}\n")
+                f.write(f"[{self.total:.2f}] {habit_text} +{amount_text}$\n")
                 f.writelines(lines)
 
             # Clear the input fields after the inputs has been added
-            # self.habitText.delete("1.0", "end-1c")
-            # self.amountText.delete("1.0", "end-1c")
+            self.habitText.delete("1.0", "end-1c")
+            self.amountText.delete("1.0", "end-1c")
 
             self.update_root()
 
