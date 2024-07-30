@@ -6,5 +6,6 @@ In order to run this program, you will need the following libraries installed:
 - tkinter
 - customtkinter
 - PySimpleGUI
+- tkCalendar
 
 you can do `pip install "library"` in the terminal
