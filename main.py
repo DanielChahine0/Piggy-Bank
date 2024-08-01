@@ -33,6 +33,7 @@ class PiggyBank:
         ct.set_appearance_mode("Light")
         ct.set_default_color_theme("dark-blue")
         self.root.resizable(False, False)
+        self.fontname = 'Times New Roman'
 
         # Menu Section
         self.menubar = tk.Menu(self.root)
@@ -65,23 +66,23 @@ class PiggyBank:
         # Amount inside the piggy bank1
         self.totalLabel = ct.CTkLabel(self.root,
                                       text="${:,.2f}".format(self.total),
-                                      font=('Arial', 45, "bold"),
+                                      font=(self.fontname, 45, "bold"),
                                       bg_color="#FFA4A0",
                                       fg_color="transparent")
         self.totalLabel.place(x=self.WIDTH - self.pigSize - self.margin + self.pigSize // 2,
-                              y=self.margin*2 + self.pigSize // 2,
+                              y=self.margin*3 + self.pigSize // 2,
                               anchor="center")
 
         # Habit Input Text
         self.HabitLabelWidth = 110
         self.habitLabel = ct.CTkLabel(self.root,
                                       text="Enter Habit: ",
-                                      font=('Arial', 20))
+                                      font=(self.fontname, 22))
         self.habitLabel.place(x=self.WIDTH-self.pigSize-self.margin,
                               y=self.pigSize+2*self.margin)
         self.habitText = ct.CTkTextbox(self.root, height=self.habitInputHeight,
                                        width=self.habitInputWidth,
-                                       font=('Arial', 15))
+                                       font=(self.fontname, 15))
         self.habitText.place(x=self.WIDTH-self.pigSize-self.margin+self.HabitLabelWidth,
                              y=self.pigSize+2*self.margin)
 
@@ -89,14 +90,14 @@ class PiggyBank:
         self.amountLabelWidth = 135
         self.amountLabel = ct.CTkLabel(self.root,
                                        text="Enter Amount: ",
-                                       font=("Arial", 20),
+                                       font=(self.fontname, 22),
                                        width=self.amountLabelWidth)
         self.amountLabel.place(x=self.WIDTH-self.pigSize-self.margin,
                                y=self.pigSize+3*self.margin+self.habitInputHeight)
         self.amountText = ct.CTkTextbox(self.root,
                                         height=self.amountInputHeight,
                                         width=self.amountInputWidth,
-                                        font=('Arial', 15))
+                                        font=(self.fontname, 15))
         self.amountText.place(x=self.WIDTH-self.pigSize-self.margin+self.amountLabelWidth,
                               y=self.pigSize + self.margin * 3 + self.habitInputHeight)
         self.amountText.bind("<KeyRelease>", self.validate_input)
@@ -106,7 +107,7 @@ class PiggyBank:
                                          width=self.btnWidth,
                                          height=self.btnHeight,
                                          text="ADD",
-                                         font=('Arial', 18, "bold"),
+                                         font=(self.fontname, 20),
                                          command=self.add_to_bank)
         self.addAmountBtn.place(x=self.WIDTH-self.margin*2.5-self.btnWidth*2,
                                 y=self.margin*4+self.pigSize+self.habitInputHeight+self.amountInputHeight)
@@ -114,20 +115,20 @@ class PiggyBank:
                                             width=self.btnWidth,
                                             height=self.btnHeight,
                                             text="REMOVE",
-                                            font=('Arial', 18, "bold"),
+                                            font=(self.fontname, 20),
                                             command=self.remove_from_bank)
         self.removeAmountBtn.place(x=self.WIDTH - self.margin * 1.5 - self.btnWidth,
                                    y=self.margin*4 + self.pigSize + self.habitInputHeight + self.amountInputHeight)
 
         # Clear Button
         self.clearBtn = ct.CTkButton(self.root, width=self.btnWidth, height=self.btnHeight,
-                                     text="CLEAR", font=('Arial', 18, "bold"), command=self.clear_data)
+                                     text="CLEAR", font=(self.fontname, 20), command=self.clear_data)
         self.clearBtn.place(x=self.WIDTH-self.margin*2.5-self.btnWidth*2,
                             y=self.pigSize+self.habitInputHeight*2+self.btnHeight+4.6*self.margin)
 
         # Guide Button
         self.guideBtn = ct.CTkButton(self.root, width=self.btnWidth, height=self.btnHeight,
-                                     text="GUIDE", font=('Arial', 18, "bold"), command=self.open_guide)
+                                     text="GUIDE", font=(self.fontname, 20), command=self.open_guide)
         self.guideBtn.place(x=self.WIDTH-self.margin*1.5 - self.btnWidth,
                             y=self.pigSize+self.habitInputHeight*2+self.btnHeight+4.6*self.margin)
 
@@ -137,7 +138,7 @@ class PiggyBank:
                                            height=self.btnHeight,
                                            command=self.display_logs,
                                            text="DISPLAY LOGS",
-                                           font=('Arial', 18, "bold"),
+                                           font=(self.fontname, 20),
                                            corner_radius=self.btnWidth)
         self.displayLogsBtn.place(x=self.WIDTH-self.margin*2.5-self.btnWidth*2,
                                   y=self.HEIGHT-self.btnHeight-self.themeBtnSize-self.margin//2)
@@ -154,22 +155,42 @@ class PiggyBank:
         self.switchAppearanceBtn.place(x=self.WIDTH - self.margin//5 - self.themeBtnSize,
                                        y=self.HEIGHT - self.margin//5 - self.themeBtnSize)
 
+        # To-do list Label
+        self.taskLabelHeight = 30
+        self.taskLabel = ct.CTkLabel(self.root,
+                                     text="Tasks",
+                                     font=(self.fontname, 35),
+                                     height=self.taskLabelHeight)
+        self.taskLabel.pack(pady=self.margin//3)
+
         # Date Entry
-        self.dateEntryWidth = 6
+        self.dateEntryWidth = 7
         self.dateEntry = DateEntry(self.root,
                                    width=self.dateEntryWidth,
-                                   font=('Arial', 18))
-        self.dateEntry.place(x=self.WIDTH-self.pigSize,
-                             y=self.margin)
+                                   font=(self.fontname, 18))
+        self.dateEntry.place(x=self.WIDTH-self.pigSize+self.margin*4,
+                             y=self.taskLabelHeight + 2*self.margin)
 
         # Task Entry
-        self.taskEntryWidth = 350
+        self.taskEntryWidth = 300
         self.taskEntryHeight = 30
         self.taskEntry = ct.CTkEntry(self.root,
                                      width=self.taskEntryWidth,
-                                     height=self.taskEntryHeight)
-        # self.taskEntry.place(x=self.WIDTH-self.margin*2-self.pigSize-self.taskEntryWidth,
-        #                      y=self.margin)
+                                     height=self.taskEntryHeight,
+                                     font=(self.fontname, 15))
+        self.taskEntry.place(x=self.WIDTH-self.margin*4-self.pigSize-self.taskEntryWidth-80,
+                             y=self.margin+self.taskLabelHeight+1)
+
+        # List of Tasks
+        self.listboxWidth = 85
+        self.listboxHeight = 20
+        self.listbox = tk.Listbox(self.root,
+                                  width=self.listboxWidth,
+                                  height=self.listboxHeight,
+                                  borderwidth=5)
+        self.listbox.place(x=self.WIDTH-self.pigSize-self.taskEntryHeight-self.margin-self.listboxWidth-207,
+                           y=self.taskLabelHeight+self.taskEntryHeight+self.margin*3)
+
 
         self.root.mainloop()
 
