@@ -1,6 +1,7 @@
 import customtkinter as ct
 from PIL import Image
 import tkinter as tk
+from tkcalendar import DateEntry
 # from datetime import date
 
 
@@ -153,6 +154,23 @@ class PiggyBank:
         self.switchAppearanceBtn.place(x=self.WIDTH - self.margin//5 - self.themeBtnSize,
                                        y=self.HEIGHT - self.margin//5 - self.themeBtnSize)
 
+        # Date Entry
+        self.dateEntryWidth = 6
+        self.dateEntry = DateEntry(self.root,
+                                   width=self.dateEntryWidth,
+                                   font=('Arial', 18))
+        self.dateEntry.place(x=self.WIDTH-self.pigSize,
+                             y=self.margin)
+
+        # Task Entry
+        self.taskEntryWidth = 350
+        self.taskEntryHeight = 30
+        self.taskEntry = ct.CTkEntry(self.root,
+                                     width=self.taskEntryWidth,
+                                     height=self.taskEntryHeight)
+        # self.taskEntry.place(x=self.WIDTH-self.margin*2-self.pigSize-self.taskEntryWidth,
+        #                      y=self.margin)
+
         self.root.mainloop()
 
     def display_logs(self):
@@ -167,14 +185,14 @@ class PiggyBank:
                             + str(200 + self.WIDTH // 2 - logsWindowWidth // 2) + "+"
                             + str(150))
 
+        # Scrollable Frame
         update_frame_width = 350
         update_frame_height = logsWindowHeight - logsMargin * 3
         update_frame = ct.CTkScrollableFrame(logsWindow,
                                              width=update_frame_width,
                                              height=update_frame_height)
         update_frame.pack(pady=logsMargin)
-        # update_frame.place(x=self.WIDTH - self.pigSize - self.margin * 3 - self.update_frame_width,
-        #                    y=self.margin)
+
         # Text inside the scrollable frame
         allData = self.get_data()
         update_text = ct.CTkLabel(update_frame,
