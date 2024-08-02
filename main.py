@@ -2,6 +2,7 @@ import customtkinter as ct
 from PIL import Image
 import tkinter as tk
 from tkcalendar import DateEntry
+import json
 # from datetime import date
 
 
@@ -182,17 +183,61 @@ class PiggyBank:
                              y=self.margin+self.taskLabelHeight+1)
 
         # List of Tasks
-        self.listboxWidth = 85
+        self.listboxWidth = 55
         self.listboxHeight = 20
+        self.tasksToDo = []
+        self.tasksToDo = self.get_tasks()
         self.listbox = tk.Listbox(self.root,
                                   width=self.listboxWidth,
                                   height=self.listboxHeight,
-                                  borderwidth=5)
-        self.listbox.place(x=self.WIDTH-self.pigSize-self.taskEntryHeight-self.margin-self.listboxWidth-207,
+                                  borderwidth=5,
+                                  font=(self.fontname, 14))
+        for task in self.tasksToDo:
+            str_task = f"{task[3]} | Due: {task[0]}-{task[1]}-{task[2]}"
+            self.listbox.insert(tk.END, str_task)
+
+        self.listbox.place(x=self.WIDTH-self.pigSize-self.taskEntryHeight-self.margin-self.listboxWidth-230,
                            y=self.taskLabelHeight+self.taskEntryHeight+self.margin*3)
 
+        # Add Task
+        self.addTask = ct.CTkButton(self.root, text="ADD TASK", command=self.add_task)
+        self.addTask.place(x=100, y=100)
 
         self.root.mainloop()
+
+    def add_task(self):
+        task_str = self.taskEntry.get().strip()
+        date = self.dateEntry.get_date()
+        current_day = date.day
+        current_month = date.month
+        current_year = date.year
+        task = [current_year, current_month, current_day, task_str]
+        for i in range(self.tasksToDo):
+            # If the year is before the earliest year
+            if self.tasksToDo[i][0] > current_year:
+                self.tasksToDo.insert(i, task)
+                break
+            # If the year is the same -> check the month
+            elif self.tasksToDo[i][0] == current_year:
+                # if the month is before the earliest month
+                if self.tasksToDo[i][1] > current_month:
+                    self.tasksToDo.insert(i, task)
+                    break
+                # if it's in the same month -> check the day
+                elif self.tasksToDo[i][1] == current_month:
+                    if self.tasksToDo[i][2] > current_day:
+                        self.tasksToDo.insert(i, task)
+                        break
+        self.tasksToDo.append(task)
+        print(self.tasksToDo)
+        with open("Data/tasks.json", "w") as f:
+            dictTask = {"abc": self.tasksToDo}
+            json.dump(dictTask, f)
+
+    def get_tasks(self):
+        with open("Data/tasks.json", "r") as f:
+            dictTask = json.load(f)
+            return dictTask.get("abc")
 
     def display_logs(self):
         # Window settings

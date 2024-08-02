@@ -3,6 +3,10 @@ from tkinter import messagebox
 from tkcalendar import DateEntry
 import customtkinter as ctk
 
+# lista = [1,2,3,4,5,6]
+# lista.insert(6, 111)
+# print(lista)
+
 def add_task():
     task = entry.get()
     date = date_entry.get_date()
@@ -12,6 +16,7 @@ def add_task():
         date_entry.set_date("")
     else:
         messagebox.showwarning("Warning", "You must enter a task.")
+
 
 def delete_task():
     try:
