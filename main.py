@@ -234,7 +234,7 @@ class PiggyBank:
             with open("Data/tasks.json", "w") as f:
                 dictTask = {"abc": self.tasksToDo}
                 json.dump(dictTask, f)
-            
+
             self.listbox.delete(selected_task_index)
         except IndexError:
             messagebox.showwarning("Warning", "Select a task to remove")
