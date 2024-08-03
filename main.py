@@ -3,6 +3,7 @@ from PIL import Image
 import tkinter as tk
 from tkcalendar import DateEntry
 import json
+import tkinter.messagebox as messagebox
 # from datetime import date
 
 
@@ -181,6 +182,8 @@ class PiggyBank:
                                      font=(self.fontname, 15))
         self.taskEntry.place(x=self.WIDTH-self.margin*4-self.pigSize-self.taskEntryWidth-80,
                              y=self.margin+self.taskLabelHeight+1)
+        # Bind the ENTER key to add_task function
+        self.taskEntry.bind("<Return>", lambda event: self.add_task())
 
         # List of Tasks
         self.listboxWidth = 55
@@ -192,12 +195,19 @@ class PiggyBank:
                                   height=self.listboxHeight,
                                   borderwidth=5,
                                   font=(self.fontname, 14))
-        for task in self.tasksToDo:
-            str_task = f"{task[3]} | Due: {task[0]}-{task[1]}-{task[2]}"
-            self.listbox.insert(tk.END, str_task)
+        self.display_tasks()
 
         self.listbox.place(x=self.WIDTH-self.pigSize-self.taskEntryHeight-self.margin-self.listboxWidth-230,
                            y=self.taskLabelHeight+self.taskEntryHeight+self.margin*3)
+
+        # Remove all Tasks Button
+        self.clearAllBtn = ct.CTkButton(self.root,
+                                        text="CLEAR ALL TASKS",
+                                        height=self.btnHeight,
+                                        width=self.btnWidth*2,
+                                        font=(self.fontname, 20),
+                                        command=self.remove_all_tasks)
+        self.clearAllBtn.pack()
 
         # Add Task
         self.addTask = ct.CTkButton(self.root, text="ADD TASK", command=self.add_task)
@@ -205,34 +215,57 @@ class PiggyBank:
 
         self.root.mainloop()
 
-    def add_task(self):
-        task_str = self.taskEntry.get().strip()
-        date = self.dateEntry.get_date()
-        current_day = date.day
-        current_month = date.month
-        current_year = date.year
-        task = [current_year, current_month, current_day, task_str]
-        for i in range(self.tasksToDo):
-            # If the year is before the earliest year
-            if self.tasksToDo[i][0] > current_year:
-                self.tasksToDo.insert(i, task)
-                break
-            # If the year is the same -> check the month
-            elif self.tasksToDo[i][0] == current_year:
-                # if the month is before the earliest month
-                if self.tasksToDo[i][1] > current_month:
-                    self.tasksToDo.insert(i, task)
-                    break
-                # if it's in the same month -> check the day
-                elif self.tasksToDo[i][1] == current_month:
-                    if self.tasksToDo[i][2] > current_day:
-                        self.tasksToDo.insert(i, task)
-                        break
-        self.tasksToDo.append(task)
-        print(self.tasksToDo)
+    def remove_all_tasks(self):
+        self.tasksToDo.clear()
         with open("Data/tasks.json", "w") as f:
             dictTask = {"abc": self.tasksToDo}
             json.dump(dictTask, f)
+        self.display_tasks()
+
+    def display_tasks(self):
+        self.listbox.delete(0, tk.END)
+        for task in self.tasksToDo:
+            str_task = f"{task[3]} | Due: {task[0]}-{task[1]}-{task[2]}"
+            self.listbox.insert(tk.END, str_task)
+
+    def add_task(self):
+        task_str = self.taskEntry.get().strip()
+        date = self.dateEntry.get_date()
+        if task_str:
+            self.taskEntry.delete(0, "end")
+            current_day = date.day
+            current_month = date.month
+            current_year = date.year
+            task = [current_year, current_month, current_day, task_str]
+            added = False
+            for i in range(len(self.tasksToDo)):
+                # If the year is before the earliest year
+                if self.tasksToDo[i][0] > current_year:
+                    self.tasksToDo.insert(i, task)
+                    added = True
+                    break
+                # If the year is the same -> check the month
+                elif self.tasksToDo[i][0] == current_year:
+                    # if the month is before the earliest month
+                    if self.tasksToDo[i][1] > current_month:
+                        self.tasksToDo.insert(i, task)
+                        added = True
+                        break
+                    # if it's in the same month -> check the day
+                    elif self.tasksToDo[i][1] == current_month:
+                        if self.tasksToDo[i][2] > current_day:
+                            self.tasksToDo.insert(i, task)
+                            added = True
+                            break
+            if not added:
+                self.tasksToDo.append(task)
+            print(self.tasksToDo)
+            with open("Data/tasks.json", "w") as f:
+                dictTask = {"abc": self.tasksToDo}
+                json.dump(dictTask, f)
+            self.display_tasks()
+        else:
+            messagebox.showwarning("Warning", "You should enter a task")
 
     def get_tasks(self):
         with open("Data/tasks.json", "r") as f:
