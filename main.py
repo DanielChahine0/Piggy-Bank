@@ -187,7 +187,7 @@ class PiggyBank:
 
         # List of Tasks
         self.listboxWidth = 55
-        self.listboxHeight = 20
+        self.listboxHeight = 25
         self.tasksToDo = []
         self.tasksToDo = self.get_tasks()
         self.listbox = tk.Listbox(self.root,
@@ -204,16 +204,40 @@ class PiggyBank:
         self.clearAllBtn = ct.CTkButton(self.root,
                                         text="CLEAR ALL TASKS",
                                         height=self.btnHeight,
-                                        width=self.btnWidth*2,
+                                        width=int(self.btnWidth*1.5),
                                         font=(self.fontname, 20),
                                         command=self.remove_all_tasks)
-        self.clearAllBtn.pack()
+        self.clearAllBtn.place(x=self.WIDTH-self.pigSize-self.margin*3-self.btnWidth*1.5-5,
+                               y=self.HEIGHT-40-self.margin)
+
+        # Mark as Completed Button
+        self.markCompleted = ct.CTkButton(self.root,
+                                          text="COMPLETE TASK",
+                                          height=self.btnHeight,
+                                          font=(self.fontname, 20),
+                                          command=self.remove_task)
+        self.markCompleted.place(x=self.WIDTH-self.pigSize-self.margin*3-self.btnWidth*3-10,
+                                 y=self.HEIGHT-40-self.margin)
+
 
         # Add Task
-        self.addTask = ct.CTkButton(self.root, text="ADD TASK", command=self.add_task)
-        self.addTask.place(x=100, y=100)
+        # self.addTask = ct.CTkButton(self.root, text="ADD TASK", command=self.add_task)
+        # self.addTask.place(x=100, y=100)
 
         self.root.mainloop()
+
+    def remove_task(self):
+        try:
+            selected_task_index = self.listbox.curselection()[0]
+
+            del self.tasksToDo[selected_task_index]
+            with open("Data/tasks.json", "w") as f:
+                dictTask = {"abc": self.tasksToDo}
+                json.dump(dictTask, f)
+            
+            self.listbox.delete(selected_task_index)
+        except IndexError:
+            messagebox.showwarning("Warning", "Select a task to remove")
 
     def remove_all_tasks(self):
         self.tasksToDo.clear()
@@ -265,7 +289,7 @@ class PiggyBank:
                 json.dump(dictTask, f)
             self.display_tasks()
         else:
-            messagebox.showwarning("Warning", "You should enter a task")
+            messagebox.showwarning("Warning", "Please enter a task!")
 
     def get_tasks(self):
         with open("Data/tasks.json", "r") as f:
