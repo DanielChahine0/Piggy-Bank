@@ -163,7 +163,9 @@ class PiggyBank:
                                      text="Tasks",
                                      font=(self.fontname, 35),
                                      height=self.taskLabelHeight)
-        self.taskLabel.pack(pady=self.margin//3)
+        self.taskLabel.place(x=self.WIDTH//2+50,
+                             y=25,
+                             anchor="center")
 
         # Date Entry
         self.dateEntryWidth = 7
@@ -218,11 +220,6 @@ class PiggyBank:
                                           command=self.remove_task)
         self.markCompleted.place(x=self.WIDTH-self.pigSize-self.margin*3-self.btnWidth*3-10,
                                  y=self.HEIGHT-40-self.margin)
-
-
-        # Add Task
-        # self.addTask = ct.CTkButton(self.root, text="ADD TASK", command=self.add_task)
-        # self.addTask.place(x=100, y=100)
 
         self.root.mainloop()
 
