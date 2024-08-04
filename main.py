@@ -221,6 +221,18 @@ class PiggyBank:
         self.markCompleted.place(x=self.WIDTH-self.pigSize-self.margin*3-self.btnWidth*3-10,
                                  y=self.HEIGHT-40-self.margin)
 
+        # Outfit Picker Label
+        self.outfitPickerWidth = 100
+        self.outfitPickerHeight = 50
+        self.outfitPicker = ct.CTkLabel(self.root,
+                                        text="Outfit Picker",
+                                        font=(self.fontname, 30),
+                                        height=self.outfitPickerHeight,
+                                        width=self.outfitPickerWidth)
+        self.outfitPicker.place(x=220,
+                                y=self.HEIGHT//2-10,
+                                anchor="center")
+
         self.root.mainloop()
 
     def remove_task(self):
