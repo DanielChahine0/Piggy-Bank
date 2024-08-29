@@ -233,6 +233,17 @@ class PiggyBank:
                                 y=self.HEIGHT//2-10,
                                 anchor="center")
 
+        # View Clothes Button
+        self.viewClothesBtn = ct.CTkButton(self.root,
+                                           text="VIEW CLOTHES",
+                                           font=(self.fontname, 20),
+                                           height=self.btnHeight,
+                                           width=180,
+                                           command=self.view_clothes)
+        self.viewClothesBtn.place(x=220,
+                                  y=self.HEIGHT-self.btnHeight//2-self.margin,
+                                  anchor="center")
+
         self.root.mainloop()
 
     def remove_task(self):
@@ -304,6 +315,61 @@ class PiggyBank:
         with open("Data/tasks.json", "r") as f:
             dictTask = json.load(f)
             return dictTask.get("abc")
+
+    def view_clothes(self):
+        clothesWindow = ct.CTkToplevel()
+        clothesWindow.title("List of Clothes")
+        clothesWindow.resizable(False, False)
+        clothesMargin = 10
+        clothesWindowWidth = 700
+        clothesWindowHeight = 500
+        clothesWindow.geometry("" + str(clothesWindowWidth) + "x" + str(clothesWindowHeight) + "+"
+                               + str(200 + self.WIDTH // 2 - clothesWindowWidth // 2) + "+"
+                               + str(150))
+
+        listboxWidth = 55
+        listboxHeight = 23
+        clothes = [1, 2, 3, 4]
+        # clothes = self.get_clothes()
+        listbox = tk.Listbox(clothesWindow,
+                             width=listboxWidth,
+                             height=listboxHeight,
+                             borderwidth=5,
+                             font=(self.fontname, 14))
+        listbox.delete(0, tk.END)
+        for item in clothes:
+            str_clothes = f"THIS IS: {item}"
+            listbox.insert(tk.END, str_clothes)
+        listbox.place(x=clothesMargin, y=clothesMargin)
+
+        infoLabelHeight = 20
+        infoLabelWidth = 50
+
+        # Color Section
+        colorLabel = ct.CTkLabel(clothesWindow,
+                                 text="Color",
+                                 font=(self.fontname, 25),
+                                 height=infoLabelHeight,
+                                 width=infoLabelWidth)
+        colorLabel.place(x=420, y=clothesMargin)
+        colorEntry = ct.CTkEntry(clothesWindow,
+                                 width=200,
+                                 height=25,
+                                 font=(self.fontname, 20))
+        colorEntry.place(x=480, y=clothesMargin)
+
+        # Type Section
+        typeLabel = ct.CTkLabel(clothesWindow,
+                                text="Type",
+                                font=(self.fontname, 25),
+                                height=infoLabelHeight,
+                                width=infoLabelWidth)
+        typeLabel.place(x=420, y=clothesMargin*4 + infoLabelHeight)
+        
+
+        clothesWindow.lift()
+        clothesWindow.focus_force()
+        clothesWindow.grab_set()
 
     def display_logs(self):
         # Window settings
