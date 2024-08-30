@@ -354,18 +354,51 @@ class PiggyBank:
         colorLabel.place(x=420, y=clothesMargin)
         colorEntry = ct.CTkEntry(clothesWindow,
                                  width=200,
-                                 height=25,
+                                 height=20,
                                  font=(self.fontname, 20))
         colorEntry.place(x=480, y=clothesMargin)
 
-        # Type Section
-        typeLabel = ct.CTkLabel(clothesWindow,
-                                text="Type",
-                                font=(self.fontname, 25),
-                                height=infoLabelHeight,
-                                width=infoLabelWidth)
-        typeLabel.place(x=420, y=clothesMargin*4 + infoLabelHeight)
-        
+        # Bottom or Top
+        bottom_label = ct.CTkLabel(clothesWindow,
+                                   text="BOTTOM",
+                                   font=(self.fontname, 22))
+        bottom_label.place(x=420, y=clothesMargin*2+infoLabelHeight+5)
+        switch = ct.CTkSwitch(clothesWindow,
+                              text="TOP",
+                              font=(self.fontname, 22))
+        switch.place(x=521, y=clothesMargin*2+infoLabelHeight+7)
+
+        # Bottom Type Section
+        bottomTypeLabel = ct.CTkLabel(clothesWindow,
+                                      text="Bottom Type",
+                                      font=(self.fontname, 25),
+                                      height=infoLabelHeight,
+                                      width=infoLabelWidth)
+        bottomTypeLabel.place(x=420, y=clothesMargin*4 + infoLabelHeight+20)
+
+        bottomType_options = ["Sweats", "Jeans", "Cargo", "Camo", "Shorts"]
+        bottomType_optionsMenu = ct.CTkOptionMenu(clothesWindow,
+                                                  values=bottomType_options,
+                                                  font=(self.fontname, 22),
+                                                  height=33,
+                                                  width=100)
+        bottomType_optionsMenu.place(x=500, y=clothesMargin*4+infoLabelHeight+20)
+
+        # Top Type Section
+        topTypeLabel = ct.CTkLabel(clothesWindow,
+                                   text="Top Type",
+                                   font=(self.fontname, 25),
+                                   height=infoLabelHeight,
+                                   width=infoLabelWidth)
+        topTypeLabel.place(x=420, y=clothesMargin * 4 + infoLabelHeight + 60)
+
+        topType_options = ["Sweats", "Jeans", "Cargo", "Camo", "Shorts"]
+        topType_optionsMenu = ct.CTkOptionMenu(clothesWindow,
+                                               values=bottomType_options,
+                                               font=(self.fontname, 22),
+                                               height=33,
+                                               width=100)
+        topType_optionsMenu.place(x=520, y=clothesMargin * 4 + infoLabelHeight + 60)
 
         clothesWindow.lift()
         clothesWindow.focus_force()
