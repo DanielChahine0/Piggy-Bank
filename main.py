@@ -391,18 +391,47 @@ class PiggyBank:
                                    height=infoLabelHeight,
                                    width=infoLabelWidth)
         topTypeLabel.place(x=420, y=clothesMargin * 4 + infoLabelHeight + 60)
-
-        topType_options = ["Sweats", "Jeans", "Cargo", "Camo", "Shorts"]
+        topType_options = ["s", "s", "s", "s", "s"]
         topType_optionsMenu = ct.CTkOptionMenu(clothesWindow,
-                                               values=bottomType_options,
+                                               values=topType_options,
                                                font=(self.fontname, 22),
                                                height=33,
                                                width=100)
         topType_optionsMenu.place(x=520, y=clothesMargin * 4 + infoLabelHeight + 60)
 
+        # Theme Section
+        themeLabel = ct.CTkLabel(clothesWindow,
+                                 text="Theme",
+                                 font=(self.fontname, 25),
+                                 height=infoLabelHeight,
+                                 width=infoLabelWidth)
+        themeLabel.place(x=420, y=clothesMargin*6+infoLabelHeight+80)
+        theme_options = ["a", "a", "a", "a", "a", "b"]
+        theme_optionsMenu = ct.CTkOptionMenu(clothesWindow,
+                                             values=theme_options,
+                                             font=(self.fontname, 22),
+                                             height=33,
+                                             width=100)
+        theme_optionsMenu.place(x=495, y=158)
+
+        # Add item Button
+        addItemBtn = ct.CTkButton(clothesWindow,
+                                  text="ADD ITEM",
+                                  font=(self.fontname, 20),
+                                  command=self.add_item_to_closet,
+                                  corner_radius=10,
+                                  border_width=3,
+                                  width=150,
+                                  height=50)
+        addItemBtn.place(x=500, y=200)
+
+
         clothesWindow.lift()
         clothesWindow.focus_force()
         clothesWindow.grab_set()
+
+    def add_item_to_closet(self):
+        pass
 
     def display_logs(self):
         # Window settings
