@@ -425,7 +425,6 @@ class PiggyBank:
                                   height=50)
         addItemBtn.place(x=500, y=200)
 
-
         clothesWindow.lift()
         clothesWindow.focus_force()
         clothesWindow.grab_set()
