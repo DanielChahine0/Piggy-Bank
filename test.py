@@ -1,13 +1,13 @@
-n = int(input())
-list1 = input().split(" ")
-fishy = False
-# print(list1)
-for i in range(n):
-    if list1[i] == "mumble" or str(i + 1) == list1[i]:
-        continue
-    else:
-        fishy = True
-if not fishy:
-    print("makes sense")
-else:
-    print("something is fishy")
+def f(n):
+    if n<2:
+        return False
+    x=2
+    while x<n:
+        if n%x==0:
+            return False
+        x=x+1
+    return True
+
+
+for i in range(20):
+    print(str(i)+" "+str(f(i)))
